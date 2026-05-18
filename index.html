@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Acompanhamento Fábrica - Maio</title>
+<meta name="theme-color" content="#1e3a8a">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#f5f5f5;color:#222}
+header{background:#1e3a8a;color:#fff;padding:14px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10;box-shadow:0 2px 4px rgba(0,0,0,.1)}
+.menu-btn{background:none;border:none;color:#fff;font-size:24px;cursor:pointer;padding:4px 8px}
+header h1{font-size:17px;font-weight:600;flex:1}
+nav{position:fixed;top:0;left:-280px;width:280px;height:100vh;background:#1e3a8a;color:#fff;transition:left .3s;z-index:20;padding-top:60px;overflow-y:auto}
+nav.open{left:0;box-shadow:4px 0 12px rgba(0,0,0,.3)}
+nav ul{list-style:none}
+nav li a{display:block;padding:16px 20px;color:#fff;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.1);font-size:15px;transition:background .2s}
+nav li a:hover,nav li a.active{background:rgba(255,255,255,.15)}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:15;display:none}
+.overlay.show{display:block}
+main{padding:16px;max-width:1200px;margin:0 auto}
+.chart-slide{display:none;background:#fff;border-radius:8px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.chart-slide.active{display:block}
+.chart-slide h2{font-size:18px;margin-bottom:12px;color:#1e3a8a}
+.chart-slide img{width:100%;height:auto;border-radius:4px}
+@media(max-width:600px){header h1{font-size:15px}.chart-slide h2{font-size:16px}}
+</style>
+</head>
+<body>
+<header>
+  <button class="menu-btn" id="menuBtn">☰</button>
+  <h1>Acompanhamento Fábrica - Maio</h1>
+</header>
+<div class="overlay" id="overlay"></div>
+<nav id="sideMenu"><ul>
+        <li><a href="#" data-idx="0" class="active">Produção Acumulada (kg) - Maio/26</a></li>
+        <li><a href="#" data-idx="1" class="">Percentual Acumulado Apara</a></li>
+        <li><a href="#" data-idx="2" class="">% Apara por Máquina - Maio</a></li>
+        <li><a href="#" data-idx="3" class="">Percentual Apara por Máquina</a></li>
+        <li><a href="#" data-idx="4" class="">Performance Diária de Produção - Maio/2026</a></li>
+        <li><a href="#" data-idx="5" class="">Produção por Máquina (kg) - Maio/26</a></li>
+</ul></nav>
+<main>
+    <section class="chart-slide active" data-idx="0">
+      <h2>Produção Acumulada (kg) - Maio/26</h2>
+      <img src="grafico-1.png" alt="Produção Acumulada (kg) - Maio/26" />
+    </section>
+    <section class="chart-slide " data-idx="1">
+      <h2>Percentual Acumulado Apara</h2>
+      <img src="grafico-2.png" alt="Percentual Acumulado Apara" />
+    </section>
+    <section class="chart-slide " data-idx="2">
+      <h2>% Apara por Máquina - Maio</h2>
+      <img src="grafico-3.png" alt="% Apara por Máquina - Maio" />
+    </section>
+    <section class="chart-slide " data-idx="3">
+      <h2>Percentual Apara por Máquina</h2>
+      <img src="grafico-4.png" alt="Percentual Apara por Máquina" />
+    </section>
+    <section class="chart-slide " data-idx="4">
+      <h2>Performance Diária de Produção - Maio/2026</h2>
+      <img src="grafico-5.png" alt="Performance Diária de Produção - Maio/2026" />
+    </section>
+    <section class="chart-slide " data-idx="5">
+      <h2>Produção por Máquina (kg) - Maio/26</h2>
+      <img src="grafico-6.png" alt="Produção por Máquina (kg) - Maio/26" />
+    </section>
+</main>
+<script>
+const mb=document.getElementById('menuBtn'),sm=document.getElementById('sideMenu'),ov=document.getElementById('overlay');
+const links=document.querySelectorAll('nav a'),slides=document.querySelectorAll('.chart-slide');
+function tg(o){sm.classList.toggle('open',o);ov.classList.toggle('show',o)}
+mb.onclick=()=>tg(!sm.classList.contains('open'));
+ov.onclick=()=>tg(false);
+links.forEach(a=>a.onclick=e=>{e.preventDefault();const i=a.dataset.idx;links.forEach(l=>l.classList.remove('active'));a.classList.add('active');slides.forEach(s=>s.classList.toggle('active',s.dataset.idx===i));tg(false);scrollTo({top:0,behavior:'smooth'})});
+</script>
+</body>
+</html>
