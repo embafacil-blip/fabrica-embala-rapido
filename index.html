@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Acompanhamento Fábrica</title>
+<meta name="theme-color" content="#1e3a8a">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#f5f5f5;color:#222}
+header{background:#1e3a8a;color:#fff;padding:14px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10;box-shadow:0 2px 4px rgba(0,0,0,.1)}
+.menu-btn{background:none;border:none;color:#fff;font-size:24px;cursor:pointer;padding:4px 8px}
+header h1{font-size:17px;font-weight:600;flex:1}
+header .current{font-size:13px;opacity:.85;margin-right:6px}
+nav{position:fixed;top:0;left:-300px;width:300px;height:100vh;background:#1e3a8a;color:#fff;transition:left .3s;z-index:20;padding-top:60px;overflow-y:auto}
+nav.open{left:0;box-shadow:4px 0 12px rgba(0,0,0,.3)}
+nav ul{list-style:none}
+.month-group>.month-hd{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;background:rgba(0,0,0,.15);font-weight:600;font-size:15px;cursor:pointer;user-select:none;border-bottom:1px solid rgba(255,255,255,.1)}
+.month-group>.month-hd .arrow{transition:transform .2s}
+.month-group.collapsed>.month-hd .arrow{transform:rotate(-90deg)}
+.month-group.collapsed>ul{display:none}
+nav li a{display:block;padding:13px 20px 13px 32px;color:#fff;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.08);font-size:14px;transition:background .2s}
+nav li a:hover,nav li a.active{background:rgba(255,255,255,.18)}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:15;display:none}
+.overlay.show{display:block}
+main{padding:16px;max-width:1200px;margin:0 auto}
+.chart-slide{display:none;background:#fff;border-radius:8px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.chart-slide.active{display:block}
+.chart-slide h2{font-size:18px;margin-bottom:4px;color:#1e3a8a}
+.chart-slide .month-tag{font-size:12px;color:#888;margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px}
+.chart-slide img{width:100%;height:auto;border-radius:4px}
+@media(max-width:600px){header h1{font-size:14px}.chart-slide h2{font-size:16px}}
+</style>
+</head>
+<body>
+<header>
+  <button class="menu-btn" id="menuBtn">☰</button>
+  <h1>Acompanhamento Fábrica</h1>
+  <span class="current" id="currentLabel"></span>
+</header>
+<div class="overlay" id="overlay"></div>
+<nav id="sideMenu"><ul id="menuList"></ul></nav>
+<main id="slides"></main>
+<script>
+// ===== CONFIGURAÇÃO DOS MESES =====
+// Para adicionar Julho no futuro: copie o bloco de Junho, troque 'junho' por 'julho' e 'Junho' por 'Julho', e coloque no TOPO do array (mais recente primeiro).
+const MESES = [
+  {
+    id: 'junho', nome: 'Junho/2026', pasta: 'junho',
+    graficos: [
+      'Produção Acumulada (kg) - Junho/26',
+      'Percentual Acumulado Apara',
+      '% Apara por Máquina - Junho',
+      'Percentual Apara por Máquina',
+      'Performance Diária de Produção - Junho/2026',
+      'Produção por Máquina (kg) - Junho/26'
+    ]
+  },
+  {
+    id: 'maio', nome: 'Maio/2026', pasta: 'maio',
+    graficos: [
+      'Produção Acumulada (kg) - Maio/26',
+      'Percentual Acumulado Apara',
+      '% Apara por Máquina - Maio',
+      'Percentual Apara por Máquina',
+      'Performance Diária de Produção - Maio/2026',
+      'Produção por Máquina (kg) - Maio/26'
+    ]
+  }
+];
+// ===== FIM DA CONFIGURAÇÃO =====
+
+const menuList=document.getElementById('menuList'),slidesEl=document.getElementById('slides'),curLbl=document.getElementById('currentLabel');
+let allSlides=[],allLinks=[];
+MESES.forEach((mes,mi)=>{
+  const grp=document.createElement('li');grp.className='month-group'+(mi===0?'':' collapsed');
+  const hd=document.createElement('div');hd.className='month-hd';hd.innerHTML='<span>'+mes.nome+'</span><span class="arrow">▼</span>';
+  hd.onclick=()=>grp.classList.toggle('collapsed');
+  const sub=document.createElement('ul');
+  mes.graficos.forEach((titulo,gi)=>{
+    const slideId=mes.id+'-'+gi;
+    const li=document.createElement('li');
+    const a=document.createElement('a');a.href='#';a.textContent=titulo;a.dataset.slide=slideId;a.dataset.mes=mes.nome;
+    if(mi===0&&gi===0)a.classList.add('active');
+    li.appendChild(a);sub.appendChild(li);allLinks.push(a);
+    const sec=document.createElement('section');sec.className='chart-slide'+(mi===0&&gi===0?' active':'');sec.dataset.slide=slideId;
+    sec.innerHTML='<h2>'+titulo+'</h2><div class="month-tag">'+mes.nome+'</div><img src="'+mes.pasta+'/grafico-'+(gi+1)+'.png" alt="'+titulo+'" onerror="this.style.opacity=.3;this.alt=\'Imagem não encontrada\'" />';
+    slidesEl.appendChild(sec);allSlides.push(sec);
+  });
+  grp.appendChild(hd);grp.appendChild(sub);menuList.appendChild(grp);
+});
+curLbl.textContent=MESES[0].nome;
+const mb=document.getElementById('menuBtn'),sm=document.getElementById('sideMenu'),ov=document.getElementById('overlay');
+function tg(o){sm.classList.toggle('open',o);ov.classList.toggle('show',o)}
+mb.onclick=()=>tg(!sm.classList.contains('open'));
+ov.onclick=()=>tg(false);
+allLinks.forEach(a=>a.onclick=e=>{
+  e.preventDefault();
+  allLinks.forEach(l=>l.classList.remove('active'));a.classList.add('active');
+  allSlides.forEach(s=>s.classList.toggle('active',s.dataset.slide===a.dataset.slide));
+  curLbl.textContent=a.dataset.mes;
+  tg(false);scrollTo({top:0,behavior:'smooth'});
+});
+</script>
+</body>
+</html>
