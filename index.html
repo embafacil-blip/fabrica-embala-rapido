@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Acompanhamento FÃ¡brica</title>
+<title>Acompanhamento Fábrica</title>
 <meta name="theme-color" content="#1e3a8a">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -42,41 +42,12 @@ main{padding:16px;max-width:1200px;margin:0 auto}
 <nav id="sideMenu"><ul id="menuList"></ul></nav>
 <main id="slides"></main>
 <script>
-// ===== CONFIGURACAO DOS MESES =====
-// Para adicionar Julho no futuro: copie o bloco de Junho, troque 'junho' por 'julho' e 'Junho' por 'Julho', e coloque no TOPO do array (mais recente primeiro).
 const MESES = [
-  {
-    id: 'junho', nome: 'Junho/2026', pasta: 'junho',
-    graficos: [
-      'Producao Acumulada (kg) - Junho/26',
-      'Percentual Acumulado Apara',
-      '% Apara por Maquina - Junho',
-      'Percentual Apara por Maquina',
-      'Performance Diaria de Producao - Junho/2026',
-      'Producao por Maquina (kg) - Junho/26'
-    ]
-  },
-  {
-    id: 'maio', nome: 'Maio/2026', pasta: 'maio',
-    graficos: [
-      'Producao Acumulada (kg) - Maio/26',
-      'Percentual Acumulado Apara',
-      '% Apara por Maquina - Maio',
-      'Percentual Apara por Maquina',
-      'Performance Diaria de Producao - Maio/2026',
-      'Producao por Maquina (kg) - Maio/26'
-    ]
-  }
+  { id: 'julho', nome: 'Julho/2026', pasta: 'julho', graficos: ['Producao Acumulada (kg) - Julho/26','% Apara por Maquina - Julho','Performance Diaria de Producao - Julho/2026','Producao por Maquina (kg) - Julho/26','Percentual Acumulado Apara','Percentual Apara por Maquina'] },
+  { id: 'junho', nome: 'Junho/2026', pasta: 'junho', graficos: ['Producao Acumulada (kg) - Junho/26','% Apara por Maquina - Junho','Performance Diaria de Producao - Junho/2026','Producao por Maquina (kg) - Junho/26','Percentual Acumulado Apara','Percentual Apara por Maquina'] },
+  { id: 'maio', nome: 'Maio/2026', pasta: 'maio', graficos: ['Producao Acumulada (kg) - Maio/26','% Apara por Maquina - Maio','Performance Diaria de Producao - Maio/2026','Producao por Maquina (kg) - Maio/26','Percentual Acumulado Apara','Percentual Apara por Maquina'] }
 ];
-// ===== GRUPO FIXO: ESTOQUE DE BOBINAS =====
-const ESTOQUE = {
-  id: 'estoque', nome: 'Estoque de Bobinas', pasta: 'estoque',
-  itens: [
-    { titulo: 'Bobina Branca - Estoque x Necessidade', img: 'bobina-branca.png' },
-    { titulo: 'Bobina Cinza - Estoque x Necessidade', img: 'bobina-cinza.png' }
-  ]
-};
-// ===== FIM DA CONFIGURACAO =====
+const ESTOQUE = { id: 'estoque', nome: 'Estoque de Bobinas', pasta: 'estoque', itens: [{ titulo: 'Bobina Branca - Estoque x Necessidade', img: 'bobina-branca.png' }, { titulo: 'Bobina Cinza - Estoque x Necessidade', img: 'bobina-cinza.png' }] };
 const menuList=document.getElementById('menuList'),slidesEl=document.getElementById('slides'),curLbl=document.getElementById('currentLabel');
 let allSlides=[],allLinks=[];
 MESES.forEach((mes,mi)=>{
@@ -85,9 +56,7 @@ MESES.forEach((mes,mi)=>{
   hd.onclick=()=>grp.classList.toggle('collapsed');
   const sub=document.createElement('ul');
   mes.graficos.forEach((titulo,gi)=>{
-    const slideId=mes.id+'-'+gi;
-    const li=document.createElement('li');
-    const a=document.createElement('a');a.href='#';a.textContent=titulo;a.dataset.slide=slideId;a.dataset.mes=mes.nome;
+    const slideId=mes.id+'-'+gi; const li=document.createElement('li'); const a=document.createElement('a');a.href='#';a.textContent=titulo;a.dataset.slide=slideId;a.dataset.mes=mes.nome;
     if(mi===0&&gi===0)a.classList.add('active');
     li.appendChild(a);sub.appendChild(li);allLinks.push(a);
     const sec=document.createElement('section');sec.className='chart-slide'+(mi===0&&gi===0?' active':'');sec.dataset.slide=slideId;
@@ -96,16 +65,13 @@ MESES.forEach((mes,mi)=>{
   });
   grp.appendChild(hd);grp.appendChild(sub);menuList.appendChild(grp);
 });
-// Grupo fixo Estoque de Bobinas (sempre colapsado por padrao)
 (function(){
   const grp=document.createElement('li');grp.className='month-group collapsed';
   const hd=document.createElement('div');hd.className='month-hd';hd.innerHTML='<span>'+ESTOQUE.nome+'</span><span class="arrow">&#9660;</span>';
   hd.onclick=()=>grp.classList.toggle('collapsed');
   const sub=document.createElement('ul');
   ESTOQUE.itens.forEach((item,gi)=>{
-    const slideId=ESTOQUE.id+'-'+gi;
-    const li=document.createElement('li');
-    const a=document.createElement('a');a.href='#';a.textContent=item.titulo;a.dataset.slide=slideId;a.dataset.mes=ESTOQUE.nome;
+    const slideId=ESTOQUE.id+'-'+gi; const li=document.createElement('li'); const a=document.createElement('a');a.href='#';a.textContent=item.titulo;a.dataset.slide=slideId;a.dataset.mes=ESTOQUE.nome;
     li.appendChild(a);sub.appendChild(li);allLinks.push(a);
     const sec=document.createElement('section');sec.className='chart-slide';sec.dataset.slide=slideId;
     sec.innerHTML='<h2>'+item.titulo+'</h2><div class="month-tag">'+ESTOQUE.nome+'</div><img src="'+ESTOQUE.pasta+'/'+item.img+'" alt="'+item.titulo+'" onerror="this.style.opacity=.3;this.alt=\'Imagem nao encontrada\'" />';
@@ -119,11 +85,9 @@ function tg(o){sm.classList.toggle('open',o);ov.classList.toggle('show',o)}
 mb.onclick=()=>tg(!sm.classList.contains('open'));
 ov.onclick=()=>tg(false);
 allLinks.forEach(a=>a.onclick=e=>{
-  e.preventDefault();
-  allLinks.forEach(l=>l.classList.remove('active'));a.classList.add('active');
+  e.preventDefault(); allLinks.forEach(l=>l.classList.remove('active'));a.classList.add('active');
   allSlides.forEach(s=>s.classList.toggle('active',s.dataset.slide===a.dataset.slide));
-  curLbl.textContent=a.dataset.mes;
-  tg(false);scrollTo({top:0,behavior:'smooth'});
+  curLbl.textContent=a.dataset.mes; tg(false); scrollTo({top:0,behavior:'smooth'});
 });
 </script>
 </body>
